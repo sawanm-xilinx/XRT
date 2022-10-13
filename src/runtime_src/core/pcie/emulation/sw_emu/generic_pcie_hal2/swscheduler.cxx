@@ -134,11 +134,11 @@ namespace xclcpuemhal2 {
       return;
 
     // acknowledge done directly to CU (xcu->addr)
-    mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->addr, (void*)&CpuemShim::CONTROL_AP_CONTINUE, 4);
+    mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->addr, (void*)&SwEmuShim::CONTROL_AP_CONTINUE, 4);
 
     // in ert_poll mode acknowlegde done to ERT
     if (xcu->polladdr && xcu->run_cnt) {
-      mParent->xclWrite(XCL_ADDR_KERNEL_CTRL,xcu->base + xcu->polladdr, (void*)&CpuemShim::CONTROL_AP_CONTINUE, 4);
+      mParent->xclWrite(XCL_ADDR_KERNEL_CTRL,xcu->base + xcu->polladdr, (void*)&SwEmuShim::CONTROL_AP_CONTINUE, 4);
     }
   }
 
@@ -146,7 +146,7 @@ namespace xclcpuemhal2 {
   {
     PRINTSTARTFUNC
     mParent->xclRead(XCL_ADDR_KERNEL_CTRL,xcu->base + xcu->addr,(void*)&(xcu->ctrlreg),4);
-    if (xcu->run_cnt && (xcu->ctrlreg & (CpuemShim::CONTROL_AP_DONE | CpuemShim::CONTROL_AP_IDLE)))
+    if (xcu->run_cnt && (xcu->ctrlreg & (SwEmuShim::CONTROL_AP_DONE | SwEmuShim::CONTROL_AP_IDLE)))
     {
       ++xcu->done_cnt;
       --xcu->run_cnt;
@@ -157,10 +157,10 @@ namespace xclcpuemhal2 {
   bool SWScheduler::cu_ready(struct xocl_cu *xcu)
   {
     PRINTSTARTFUNC
-    if ((xcu->ctrlreg & CpuemShim::CONTROL_AP_START) || (!xcu->dataflow && xcu->run_cnt))
+    if ((xcu->ctrlreg & SwEmuShim::CONTROL_AP_START) || (!xcu->dataflow && xcu->run_cnt))
       cu_poll(xcu);
 
-    bool bReady = xcu->dataflow ? !(xcu->ctrlreg & CpuemShim::CONTROL_AP_START) : xcu->run_cnt == 0;
+    bool bReady = xcu->dataflow ? !(xcu->ctrlreg & SwEmuShim::CONTROL_AP_START) : xcu->run_cnt == 0;
     return bReady;
   }
 
@@ -218,13 +218,13 @@ namespace xclcpuemhal2 {
     unsigned int size = regmap_size(xcmd);
     uint32_t *regmap = cmd_regmap(xcmd);
 
-    xcu->ctrlreg |= CpuemShim::CONTROL_AP_START;
-    const_cast<uint32_t*>(regmap)[0] = CpuemShim::CONTROL_AP_START;
-    //mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->addr,(void*)& CpuemShim::CONTROL_AP_START, 4);
+    xcu->ctrlreg |= SwEmuShim::CONTROL_AP_START;
+    const_cast<uint32_t*>(regmap)[0] = SwEmuShim::CONTROL_AP_START;
+    //mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->addr,(void*)& SwEmuShim::CONTROL_AP_START, 4);
     mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->addr, (void*)(regmap), size*4);
     // in ert poll mode request ERT to poll CU
     if (xcu->polladdr) {
-      mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->polladdr, (void*)& CpuemShim::CONTROL_AP_START, 4);
+      mParent->xclWrite(XCL_ADDR_KERNEL_CTRL, xcu->base + xcu->polladdr, (void*)& SwEmuShim::CONTROL_AP_START, 4);
     }
 
     ++xcu->run_cnt;
@@ -305,7 +305,7 @@ namespace xclcpuemhal2 {
   }
 
 
-  SWScheduler::SWScheduler(CpuemShim* _parent)
+  SWScheduler::SWScheduler(SwEmuShim* _parent)
   {
     PRINTSTARTFUNC
     mParent = _parent;
