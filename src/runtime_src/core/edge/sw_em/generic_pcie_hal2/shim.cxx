@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <boost/property_tree/xml_parser.hpp>
 
-namespace xclcpuemhal2 {
+namespace xclswemuhal2 {
 
   std::map<unsigned int, SwEmuShim*> devices;
   unsigned int SwEmuShim::mBufferCount = 0;
@@ -59,7 +59,7 @@ namespace xclcpuemhal2 {
       std::cout << "Remote Port mapping to address " << addr << " Failed" << std::endl;
       exit(-1);
     }
-    xclcpuemhal2::isRemotePortMapped = true;
+    xclswemuhal2::isRemotePortMapped = true;
     return true;
   }
 
@@ -621,7 +621,7 @@ namespace xclcpuemhal2 {
   {
     if (mLogStream.is_open()) mLogStream << __func__ << " begin " << std::endl;
     std::string xclBinName = "";
-    if (!xclcpuemhal2::validateXclBin(header, xclBinName, mDeviceProcessInQemu, mFpgaDevice)) {
+    if (!xclswemuhal2::validateXclBin(header, xclBinName, mDeviceProcessInQemu, mFpgaDevice)) {
       printf("ERROR:Xclbin validation failed\n");
       return 1;
     }
@@ -995,8 +995,8 @@ namespace xclcpuemhal2 {
 
     bool simDontRun = xclemulation::config::getInstance()->isDontRun();
     if (!simDontRun) {
-      if (!xclcpuemhal2::isRemotePortMapped) {
-        xclcpuemhal2::initRemotePortMap(mFpgaDevice);
+      if (!xclswemuhal2::isRemotePortMapped) {
+        xclswemuhal2::initRemotePortMap(mFpgaDevice);
       }
       //Send the LoadXclBin
       PLLAUNCHER::OclCommand *cmd = new PLLAUNCHER::OclCommand();
@@ -1006,11 +1006,11 @@ namespace xclcpuemhal2 {
       uint8_t* buff = cmd->generateBuffer(&length);
       for (unsigned int i = 0; i < length; i += 4) {
         uint32_t copySize = (length - i) > 4 ? 4 : length - i;
-        memcpy(((char*)(xclcpuemhal2::remotePortMappedPointer)) + i, buff + i, copySize);
+        memcpy(((char*)(xclswemuhal2::remotePortMappedPointer)) + i, buff + i, copySize);
       }
       //Send the end of packet
       char cPacketEndChar = PL_OCL_PACKET_END_MARKER;
-      memcpy((char*)(xclcpuemhal2::remotePortMappedPointer), &cPacketEndChar, 1);
+      memcpy((char*)(xclswemuhal2::remotePortMappedPointer), &cPacketEndChar, 1);
     }
 
     std::string xmlFile = "";
@@ -1652,14 +1652,14 @@ namespace xclcpuemhal2 {
       mLogStream.close();
     }
     //Tell the Pllauncher to close
-    if (xclcpuemhal2::isRemotePortMapped) {
+    if (xclswemuhal2::isRemotePortMapped) {
       auto cmd = std::make_unique<PLLAUNCHER::OclCommand>();
       cmd->setCommand(PLLAUNCHER::PL_OCL_XRESET_ID);
       uint32_t iLength;
-      memcpy((char*)(xclcpuemhal2::remotePortMappedPointer), (char*)cmd->generateBuffer(&iLength), iLength);
+      memcpy((char*)(xclswemuhal2::remotePortMappedPointer), (char*)cmd->generateBuffer(&iLength), iLength);
       //Send the end of packet
       char cPacketEndChar = PL_OCL_PACKET_END_MARKER;
-      memcpy((char*)(xclcpuemhal2::remotePortMappedPointer), &cPacketEndChar, 1);
+      memcpy((char*)(xclswemuhal2::remotePortMappedPointer), &cPacketEndChar, 1);
     }
   }
 
@@ -2203,7 +2203,7 @@ int SwEmuShim::xrtGraphInit(void * gh) {
 
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2224,7 +2224,7 @@ int SwEmuShim::xrtGraphRun(void * gh, uint32_t iterations) {
 
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2247,7 +2247,7 @@ int SwEmuShim::xrtGraphWait(void * gh) {
 
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2270,7 +2270,7 @@ int SwEmuShim::xrtGraphTimedWait(void * gh, uint64_t cycle) {
 
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2302,7 +2302,7 @@ int SwEmuShim::xrtGraphEnd(void * gh) {
 
   uint32_t ack = false;
 
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
 
@@ -2347,7 +2347,7 @@ int SwEmuShim::xrtGraphEnd(void * gh) {
 int SwEmuShim::xrtGraphTimedEnd(void * gh , uint64_t cycle) {
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2368,7 +2368,7 @@ int SwEmuShim::xrtGraphTimedEnd(void * gh , uint64_t cycle) {
 int SwEmuShim::xrtGraphResume(void * gh) {
   std::lock_guard lk(mApiMtx);
   bool ack = false;
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2393,7 +2393,7 @@ int SwEmuShim::xrtGraphResume(void * gh) {
 */
 int SwEmuShim::xrtGraphUpdateRTP(void * gh, const char *hierPathPort, const char *buffer, size_t size) {
   std::lock_guard lk(mApiMtx);
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();
@@ -2417,7 +2417,7 @@ int SwEmuShim::xrtGraphUpdateRTP(void * gh, const char *hierPathPort, const char
 */
 int SwEmuShim::xrtGraphReadRTP(void * gh, const char *hierPathPort, char *buffer, size_t size) {
   std::lock_guard lk(mApiMtx);
-  auto ghPtr = (xclcpuemhal2::GraphType*)gh;
+  auto ghPtr = (xclswemuhal2::GraphType*)gh;
   if (!ghPtr)
     return -1;
   auto graphhandle = ghPtr->getGraphHandle();

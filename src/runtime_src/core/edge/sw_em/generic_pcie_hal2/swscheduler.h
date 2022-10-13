@@ -22,7 +22,7 @@
 #define MAX_U32_SLOT_MASKS (((MAX_SLOTS-1)>>5) + 1)
 #define MAX_U32_CU_MASKS (((MAX_CUS-1)>>5) + 1)
 
-namespace xclcpuemhal2 {
+namespace xclswemuhal2 {
   class SwEmuShim;
   class xocl_cmd;
   class SWScheduler;

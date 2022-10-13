@@ -18,7 +18,7 @@
 #define DEBUG_MSGS(format, ...)
 //#define DEBUG_MSGS(format, ...) printf(format, ##__VA_ARGS__)
 
-namespace xclcpuemhal2
+namespace xclswemuhal2
 {
   std::map<unsigned int, SwEmuShim *> devices;
   unsigned int SwEmuShim::mBufferCount = 0;
@@ -2170,7 +2170,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
     auto graphhandle = ghPtr->getGraphHandle();
@@ -2199,7 +2199,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2229,7 +2229,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2259,7 +2259,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
     auto graphhandle = ghPtr->getGraphHandle();
@@ -2296,7 +2296,7 @@ namespace xclcpuemhal2
       mLogStream << __func__ << ", " << std::this_thread::get_id() << std::endl;
 
     uint32_t ack = -1;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2347,7 +2347,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2376,7 +2376,7 @@ namespace xclcpuemhal2
 
     std::lock_guard lk(mApiMtx);
     bool ack = false;
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2409,7 +2409,7 @@ namespace xclcpuemhal2
       mLogStream << __func__ << ", " << std::this_thread::get_id() << std::endl;
 
     std::lock_guard lk(mApiMtx);
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2440,7 +2440,7 @@ namespace xclcpuemhal2
       mLogStream << __func__ << ", " << std::this_thread::get_id() << std::endl;
 
     std::lock_guard lk(mApiMtx);
-    auto ghPtr = (xclcpuemhal2::GraphType *)gh;
+    auto ghPtr = (xclswemuhal2::GraphType *)gh;
     if (!ghPtr)
       return -1;
 
@@ -2552,4 +2552,4 @@ namespace xclcpuemhal2
   }
 
   /**********************************************HAL2 API's END HERE **********************************************/
-} //xclcpuemhal2
+} //xclswemuhal2

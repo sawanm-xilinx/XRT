@@ -8,7 +8,7 @@
 //#define EM_DEBUG_KDS
 #define PRINTSTARTFUNC
 //#define PRINTSTARTFUNC std::cout <<"swscheduler: " <<__func__ << " begin " << std::endl;
-namespace xclcpuemhal2 {
+namespace xclswemuhal2 {
 
   xocl_cmd::xocl_cmd()
   {

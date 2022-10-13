@@ -43,7 +43,7 @@
 #include <dlfcn.h>
 #endif
 
-namespace xclcpuemhal2
+namespace xclswemuhal2
 {
   using key_type = xrt_core::query::key_type;
   //8GB MEMSIZE to access the MMAP FILE
@@ -504,7 +504,7 @@ namespace xclcpuemhal2
     // has been loaded with an xclbin from which meta data can
     // be extracted
   public:
-    GraphType(xclcpuemhal2::SwEmuShim *handle, const char *graph)
+    GraphType(xclswemuhal2::SwEmuShim *handle, const char *graph)
     {
       _deviceHandle = handle;
       //_xclbin_uuid = xclbin_uuid;
@@ -514,12 +514,12 @@ namespace xclcpuemhal2
       _name = "";
       _startTime = 0;
     }
-    xclcpuemhal2::SwEmuShim *getDeviceHandle() { return _deviceHandle; }
+    xclswemuhal2::SwEmuShim *getDeviceHandle() { return _deviceHandle; }
     const char *getGraphName() { return _graph; }
     unsigned int getGraphHandle() { return graphHandle; }
 
   private:
-    xclcpuemhal2::SwEmuShim *_deviceHandle;
+    xclswemuhal2::SwEmuShim *_deviceHandle;
     //const uuid_t _xclbin_uuid;
     const char *_graph;
     unsigned int graphHandle;
